@@ -1,0 +1,6 @@
+@startuml
+(*) --> "loading phase"
+"loading phase" --> "analysis phase"
+"analysis phase" --> "execution phase"
+"execution phase" --> (*)
+@enduml

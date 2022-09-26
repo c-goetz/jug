@@ -1,0 +1,23 @@
+pre {
+    background: #fdf6e3;
+}
+
+.reveal blockquote {
+    background: #fdf6e3;
+}
+
+.container{
+    display: flex;
+}
+
+.col {
+    flex: 1;
+}
+
+.shrink-2 {
+    flex-shrink: 2;
+}
+
+.grow-2 {
+    flex-grow: 2;
+}
