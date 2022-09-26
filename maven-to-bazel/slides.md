@@ -13,14 +13,10 @@ github.com/c-goetz/jug
 # Allgemeines
 
 - meine eigene Meinung, nicht die meines Arbeitgebers
-- ich liebe Maven, es ist ein großartiges Stück Software
-- Denglish Galore
-- Talk kann Spuren von dreifach verschachtelten Build Systemen enthalten
 - Setzt Maven Wissen voraus
 
 ::: notes
 
-- Neige zu überspitzten Formulierungen
 - unser Build wird einfach zu groß für Maven
 
 :::
@@ -34,25 +30,6 @@ github.com/c-goetz/jug
 - 90 Kloc pom
 - über 6 MB Maven Log
 - Build + Unit Tests ~5 min
-
-## Module Dependencies {background-image="img/point-graph.png"}
-
-```sh
-mvn com.github.ferstl:depgraph-maven-plugin:aggregate \
-    "-Dincludes=net.disy*:*:*" -DmergeScopes=true
-```
-
-:::{.element: class="fragment"}
-> Modulistic terror
->
-> A vast sadistic feast
->
-> The only way to exit
->
-> Is going piece by piece
-
-Slayer, Piece by Piece
-:::
 
 ## Build Timings
 
@@ -111,17 +88,6 @@ maven-build-cache-extension
 > The code currently relies on un-released modifications in the core Maven project,
 
 - Issue Tracker: open 5/23
-
-## Heute: fixe Versionen
-
-Idee:
-
-- keine `SNAPSHOT` Versionen mehr
-- jedes Maven Modul bekommt seine eigene Version
-- Hash der Sources
-- Stock Maven *sollte* korrekt cachen
-- Pom Rewriting
-- Cache Eviction
 
 ## Die Entscheidung
 
@@ -331,14 +297,6 @@ skinparam activityArrowFontSize 24
 bazel build //:phases \
 -s \ # show subcommand
 --sandbox_debug # show sandbox commands, preserve sandbox
-```
-
-Subcommand:
-```
-SUBCOMMAND: # //:phases [action 'plantuml phases.png', configuration: <hash>, execution platform: @local_config_platform//:host]
-(cd /home/goetz/.cache/bazel/_bazel_goetz/<hash>/execroot/example && \
-  exec env - \
-  bazel-out/host/bin/plantuml -tpng -o bazel-out/k8-fastbuild/bin phases.puml)
 ```
 
 ## Sandboxing
@@ -610,15 +568,6 @@ bazel build //:glue
 - jeder weitere Build ist schnell
 - no changes: 0 Sekunden
 
-## Remote Caching
-
-- Action Cache: Action Keys zu Output Metadata
-- CAS: Hashes zu File Content
-- HTTP oder GRPC Protocol
-- mehrere Implementierungen
-- wir verwenden Buildbarn Storage
-  - deployed auf k8s durch Bazel
-
 ## Remote Caching Config
 
 `.bazelrc`
@@ -644,19 +593,6 @@ build --remote_upload_local_results=false
 
 :::
 
-## Gitlab Caching
-
-- jeder Gitlab Build läuft in einer neuen Instanz
-- Gitlab kann nur Files im Working Dir cachen
-- Bazel kann den FS Cache nicht ins Working Dir setzen
-- Vorgehen:
-  - git clone
-  - 2 neue Unterverzeichnisse: `source`, `build`
-  - verschiebe Code nach source
-  - starte Bazel mit `--output_base=build`
-  - cache `build`
-- viel traffic, 500 error von Cache Service
-
 ## Persistente Gitlab CI Instanzen
 
 - CI Instanzen einfach laufen lassen
@@ -670,7 +606,7 @@ Wie eleminieren wir den Maven Local Repo Build?
 
 --> Wir entfernen Maven (fast) aus dem Build
 
-## Bestandsaufnahme
+## Was ist zu tun?
 
 - Beschränkung auf den CI Build (Compile + Unit Tests)
 - Pom Parsing: liste alle Maven Plugins und ihre Konfigurationen auf
